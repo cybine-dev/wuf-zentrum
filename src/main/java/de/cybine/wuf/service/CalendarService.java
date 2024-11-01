@@ -106,7 +106,7 @@ public class CalendarService
         ZonedDateTime beginOfDay = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS);
 
         String data = this.eventDataService.fetchCurrentData("events", null).orElseThrow().getData();
-        Map<String, Event> persistent = this.eventService.fetchEventsEndingAfter(beginOfDay)
+        Map<String, Event> persistent = this.eventService.fetch(DatasourceQuery.builder().build())
                                                          .stream()
                                                          .collect(Collectors.toMap(Event::getExternalId,
                                                                  Function.identity()));
@@ -148,6 +148,7 @@ public class CalendarService
         log.info("Removing canceled events...");
         this.actionService.bulkPerform(persistent.values()
                                                  .stream()
+                                                 .filter(item -> item.getEndsAt().isAfter(beginOfDay))
                                                  .filter(item -> !update.containsKey(item.getExternalId()))
                                                  .map(ActionData::of)
                                                  .map(item -> Action.of(this.createSyncMetadata(correlationId,
