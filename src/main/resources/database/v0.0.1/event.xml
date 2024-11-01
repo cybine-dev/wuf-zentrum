@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <property name="json.type" value="JSON"/>
+    <property name="uuid.type" value="BINARY(16)" dbms="mariadb"/>
+    <property name="uuid.type" value="UUID"/>
+
+    <changeSet id="v0.0.1-setup-event" author="boelter.fabio">
+        <createTable tableName="event_data">
+            <column name="id" type="${uuid.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="external_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="event_organizer">
+            <column name="id" type="${uuid.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="firstname" type="VARCHAR(255)"/>
+            <column name="lastname" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+        </createTable>
+        <createIndex tableName="event_organizer" indexName="idx-event_organizer-email" unique="true">
+            <column name="email"/>
+        </createIndex>
+
+        <createTable tableName="event">
+            <column name="id" type="${uuid.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="external_id" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="starts_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ends_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="link" type="VARCHAR(500)"/>
+            <column name="address" type="VARCHAR(500)"/>
+            <column name="organizer_id" type="${uuid.type}">
+                <constraints referencedColumnNames="event_organizer(id)" foreignKeyName="fk-event-organizer_id"/>
+            </column>
+            <column name="status" type="VARCHAR(63)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="event" indexName="idx-event-external_id" unique="true">
+            <column name="external_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
