@@ -115,7 +115,6 @@ public class CalendarService
                                                           .toList(this.objectMapper.readValue(data, WUF_EVENT_TYPE))
                                                           .result()
                                                           .stream()
-                                                          .filter(item -> item.getEndsAt().isAfter(beginOfDay))
                                                           .collect(Collectors.toMap(Event::getExternalId,
                                                                   Function.identity()));
 
@@ -137,6 +136,7 @@ public class CalendarService
         log.info("Updating known events...");
         this.actionService.bulkPerform(update.values()
                                              .stream()
+                                             .filter(item -> item.getEndsAt().isAfter(beginOfDay))
                                              .filter(item -> persistent.containsKey(item.getExternalId()))
                                              .map(item -> EventDiff.of(persistent.get(item.getExternalId()), item))
                                              .filter(EventDiff::hasDiff)
