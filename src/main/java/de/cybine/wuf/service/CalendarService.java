@@ -174,7 +174,11 @@ public class CalendarService
         String version = this.getClass().getPackage().getImplementationVersion();
         calendar.setProductId(String.format("-//Cybine//%s v%s//DE", serviceName, version));
 
+        DatasourceConditionDetail<EventStatus> isActive = DatasourceHelper.isEqual(EventEntity_.STATUS,
+                EventStatus.ACTIVE);
+
         DatasourceQuery query = DatasourceQuery.builder()
+                                               .condition(DatasourceHelper.and(isActive))
                                                .relation(DatasourceHelper.fetch(EventEntity_.ORGANIZER))
                                                .build();
 
