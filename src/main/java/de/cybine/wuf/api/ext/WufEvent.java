@@ -47,7 +47,8 @@ public class WufEvent
                          .replace("&#038;", "&")
                          .replace("&#8220;", "\"")
                          .replace("&#8222;", "\"")
-                         .replace("&#8230;", "...");
+                         .replace("&#8230;", "...")
+                         .trim();
     }
 
     public String getSlag( )

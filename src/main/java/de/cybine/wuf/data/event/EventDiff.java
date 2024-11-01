@@ -2,6 +2,7 @@ package de.cybine.wuf.data.event;
 
 import lombok.*;
 
+import java.time.*;
 import java.util.*;
 
 @Data
@@ -17,10 +18,10 @@ public class EventDiff
         if (!Objects.equals(this.previous.getTitle(), this.next.getTitle()))
             return true;
 
-        if (!Objects.equals(this.previous.getStartsAt(), this.next.getStartsAt()))
+        if (!Objects.equals(this.previous.getStartsAt().withZoneSameInstant(ZoneId.systemDefault()), this.next.getStartsAt().withZoneSameInstant(ZoneId.systemDefault())))
             return true;
 
-        if (!Objects.equals(this.previous.getEndsAt(), this.next.getEndsAt()))
+        if (!Objects.equals(this.previous.getEndsAt().withZoneSameInstant(ZoneId.systemDefault()), this.next.getEndsAt().withZoneSameInstant(ZoneId.systemDefault())))
             return true;
 
         if (!Objects.equals(this.previous.getLink().orElse(null), this.next.getLink().orElse(null)))
