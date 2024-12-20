@@ -150,6 +150,7 @@ public class CalendarService
                                                  .stream()
                                                  .filter(item -> item.getEndsAt().isAfter(beginOfDay))
                                                  .filter(item -> !update.containsKey(item.getExternalId()))
+                                                 .filter(item -> item.getStatus() != EventStatus.ARCHIVED)
                                                  .map(ActionData::of)
                                                  .map(item -> Action.of(this.createSyncMetadata(correlationId,
                                                          ActionConfig.REMOVE_EVENT_ACTION), item))
