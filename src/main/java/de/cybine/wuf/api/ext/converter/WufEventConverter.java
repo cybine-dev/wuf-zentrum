@@ -3,9 +3,11 @@ package de.cybine.wuf.api.ext.converter;
 import de.cybine.quarkus.util.converter.*;
 import de.cybine.wuf.api.ext.*;
 import de.cybine.wuf.data.event.*;
+import lombok.extern.slf4j.*;
 
 import java.time.*;
 
+@Slf4j
 public class WufEventConverter implements Converter<WufEvent, Event>
 {
     private static final ZoneId ZONE_ID = ZoneId.of("Europe/Berlin");
@@ -29,10 +31,20 @@ public class WufEventConverter implements Converter<WufEvent, Event>
         ZonedDateTime startsAt = input.getStartsAt().withZoneSameInstant(ZONE_ID);
         if (endsAt.isBefore(input.getStartsAt()))
         {
-            endsAt = endsAt.withZoneSameInstant(ZONE_ID)
-                           .withDayOfMonth(startsAt.getDayOfMonth())
-                           .withMonth(startsAt.getMonthValue())
-                           .withYear(startsAt.getYear());
+            try
+            {
+                endsAt = endsAt.withZoneSameInstant(ZONE_ID)
+                               .withDayOfMonth(startsAt.getDayOfMonth())
+                               .withMonth(startsAt.getMonthValue())
+                               .withYear(startsAt.getYear());
+            }
+            catch (DateTimeException exception)
+            {
+                log.warn("Could not convert event ({}): Invalid end-timestamp. [{}]", input.getLink(),
+                        exception.getMessage());
+
+                return null;
+            }
         }
 
         while (endsAt.isBefore(startsAt))
