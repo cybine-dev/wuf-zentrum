@@ -34,9 +34,7 @@ public class WufEventConverter implements Converter<WufEvent, Event>
             try
             {
                 endsAt = endsAt.withZoneSameInstant(ZONE_ID)
-                               .withDayOfMonth(startsAt.getDayOfMonth())
-                               .withMonth(startsAt.getMonthValue())
-                               .withYear(startsAt.getYear());
+                               .with(startsAt.toLocalDate());
             }
             catch (DateTimeException exception)
             {
