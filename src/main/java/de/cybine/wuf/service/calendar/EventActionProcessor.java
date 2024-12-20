@@ -30,7 +30,6 @@ public class EventActionProcessor
                 converterRegistry.getProcessor(EventEntity.class, Event.class).toItem(entity).result());
     }
 
-    @SuppressWarnings("SqlSourceToSinkFlow")
     public static ActionResult<Event> remove(Action action, ActionHelper helper)
     {
         EntityManager entityManager = Arc.container().select(EntityManager.class).get();
@@ -38,8 +37,8 @@ public class EventActionProcessor
         Event event = action.<Event>getData().orElseThrow().value();
         entityManager.createNativeQuery(
                              String.format("UPDATE %s SET %s = :status WHERE %s = :id", EventEntity_.TABLE,
-                                     EventEntity_.STATUS,
-                                     EventEntity_.ID), Void.class)
+                                     EventEntity_.STATUS_COLUMN,
+                                     EventEntity_.ID_COLUMN), Void.class)
                      .setParameter("status", EventStatus.ARCHIVED.name())
                      .setParameter("id", event.getId())
                      .executeUpdate();
