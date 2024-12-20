@@ -46,7 +46,7 @@ public class ActionConfig
                        .type(WorkflowType.ACTION)
                        .with(on(REGISTER_EVENT_ACTION).from(ANY).apply(EventActionProcessor::register))
                        .with(on(UPDATE_EVENT_ACTION).from(ANY).apply(EventActionProcessor::update).when(EventActionProcessor::updateWhen))
-                       .with(on(REMOVE_EVENT_ACTION).from(ANY).apply(EventActionProcessor::remove))
+                       .with(on(REMOVE_EVENT_ACTION).from(ANY).apply(EventActionProcessor::remove).when(EventActionProcessor::removeWhen))
                        .with(on(TERMINATED_STATE).from(ANY))
                        .apply(this.service);
         // @formatter:on

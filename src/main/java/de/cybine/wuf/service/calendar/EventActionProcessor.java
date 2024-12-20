@@ -46,6 +46,11 @@ public class EventActionProcessor
         return helper.createResult(event);
     }
 
+    public static boolean removeWhen(Action action, ActionHelper helper)
+    {
+        return action.<Event>getData().orElseThrow().value().getStatus() != EventStatus.ARCHIVED;
+    }
+
     public static ActionResult<EventDiff> update(Action action, ActionHelper helper)
     {
         EntityManager entityManager = Arc.container().select(EntityManager.class).get();
