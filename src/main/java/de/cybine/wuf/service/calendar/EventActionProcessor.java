@@ -36,11 +36,11 @@ public class EventActionProcessor
 
         Event event = action.<Event>getData().orElseThrow().value();
         entityManager.createNativeQuery(
-                             String.format("UPDATE %s SET %s = :status WHERE %s = :id", EventEntity_.TABLE,
+                             String.format("UPDATE %s SET %s = :status WHERE %s = CAST(:id AS uuid)", EventEntity_.TABLE,
                                      EventEntity_.STATUS_COLUMN,
                                      EventEntity_.ID_COLUMN), Void.class)
                      .setParameter("status", EventStatus.ARCHIVED.name())
-                     .setParameter("id", event.getId())
+                     .setParameter("id", event.getId().getValue())
                      .executeUpdate();
 
         return helper.createResult(event);
